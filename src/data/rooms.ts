@@ -5,6 +5,7 @@ import type { EscapeRoom } from "../types/escape-room.ts";
  * All 57 real rooms have scores, but still lack visit dates and reviews.
  * “Nota Final” was copied from the CSV export because the connector exposes only a formula reference.
  * Verified names, locations, operators and websites come from the supplied official-websites CSV.
+ * Room types may reflect later corrections from the group rather than the original export.
  */
 export const rooms: EscapeRoom[] = [
   {
@@ -88,7 +89,7 @@ export const rooms: EscapeRoom[] = [
     notionUrl: "https://app.notion.com/p/1cd32ed9160a80de9e20c6c35bfed1c1",
   },
   {
-    id: "3e832ed9160a80419a02c4b5197454c8", slug: "sanatoriun", name: "Sanatorium 2", type: "Aventura",
+    id: "3e832ed9160a80419a02c4b5197454c8", slug: "sanatoriun", name: "Sanatorium 2", type: "Terror",
     rankingName: "Sanatoriun",
     place: "Alicante", date: null, finalScore: 9.2, review: null,
     company: "Sanatorium Escape Room", website: "https://www.sanatoriumescapealicante.com/", identityStatus: "verified",
@@ -112,7 +113,7 @@ export const rooms: EscapeRoom[] = [
     notionUrl: "https://app.notion.com/p/20a32ed9160a80f2a1d1f4e6e424f450",
   },
   {
-    id: "3e832ed9160a80a68d77cf273c68222e", slug: "casa-sin-ojos", name: "La Casa sin Ojos", type: "Terror",
+    id: "3e832ed9160a80a68d77cf273c68222e", slug: "casa-sin-ojos", name: "La Casa sin Ojos", type: "Aventura",
     rankingName: "Casa sin ojos",
     place: "Castellón de la Plana", date: null, finalScore: 8.67, review: null,
     company: "MrWolley", website: "https://mrwolley.com/", identityStatus: "verified",

@@ -81,6 +81,22 @@ test("cada sala publicada tiene una de las seis temáticas y una imagen decorati
   assert.deepEqual(used, new Set(Object.keys(themeInfo)));
 });
 
+test("las clasificaciones corregidas aparecen en la categoría y temática previstas", () => {
+  const expected = {
+    caronte: ["Terror", "horror-survival"],
+    sanatoriun: ["Terror", "horror-survival"],
+    "casa-sin-ojos": ["Aventura", "adventure-mission"],
+    "la-beerdad-oculta": ["Aventura", "adventure-mission"],
+    mazmorra: ["Aventura", "adventure-mystery"],
+  };
+  for (const [slug, [type, themeId]] of Object.entries(expected)) {
+    const room = notionDrafts.find((candidate) => candidate.slug === slug);
+    assert.ok(room, `No existe la sala ${slug}`);
+    assert.equal(room.type, type);
+    assert.equal(getRoomTheme(room)?.id, themeId);
+  }
+});
+
 test("las imágenes oficiales apuntan a salas verificadas y archivos locales existentes", async () => {
   const catalog = await localRoomSource.load();
   const bySlug = new Map(catalog.map((room) => [room.slug, room]));

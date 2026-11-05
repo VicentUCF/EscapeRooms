@@ -28,7 +28,7 @@ export const roomDescriptions: Record<string, RoomDescription> = {
     source: "https://terrorstories.com/valencia/en/psicofonia-escape-room",
   },
   "caronte": {
-    text: "Una clínica de ensayos experimentales abre sus puertas a nuevos participantes. Caronte combina esa premisa inquietante con una experiencia de terror que el grupo valoró especialmente por su actuación, su introducción y su intensidad.",
+    text: "Una clínica de ensayos experimentales abre sus puertas a nuevos participantes. Caronte combina esa premisa inquietante con terror de supervivencia; el grupo valoró especialmente su actuación, su introducción y su intensidad.",
     source: "https://terrorstories.com/valencia/en/caronte-escape-room",
   },
   "sesion-de-soterismo-exorcista": {
@@ -48,7 +48,7 @@ export const roomDescriptions: Record<string, RoomDescription> = {
     source: "https://terrorstories.com/valencia/en/hotel-de-los-suicidas-escape-room",
   },
   "sanatoriun": {
-    text: "Sanatorium 2 recupera el misterio de un hospital abandonado para una aventura de investigación. Su ambientación y su historia recibieron un 10 en nuestra ficha, los dos apartados mejor puntuados por el grupo.",
+    text: "Sanatorium 2 lleva al grupo a un hospital abandonado en una experiencia de terror y supervivencia. Su ambientación y su historia recibieron un 10 en nuestra ficha, los dos apartados mejor puntuados por el grupo.",
     source: "https://www.sanatoriumescapealicante.com/",
   },
   "lechero": {

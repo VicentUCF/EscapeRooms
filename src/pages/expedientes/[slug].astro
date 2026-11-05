@@ -28,12 +28,19 @@ const metaDescription = `Descubre ${room.name}${room.place ? ` en ${room.place}`
 <BaseLayout title={room.name} description={metaDescription} active="expedientes">
   <div class="breadcrumb"><a href="/">Inicio</a><span aria-hidden="true">/</span><a href="/expedientes/">Expedientes</a><span aria-hidden="true">/</span><span aria-current="page">{room.name}</span></div>
   <article class:list={["detail-page", theme && "theme-page", theme && `theme--${theme.id}`]} style={theme ? `--theme-backdrop: url('${theme.background}')` : undefined}>
-    <header class:list={["detail-header", "section-frame", theme && "theme-detail", theme && `theme--${theme.id}`]}>
+    <header class:list={["detail-header", "section-frame", groupPhotos.length > 0 && "detail-header--with-visit", theme && "theme-detail", theme && `theme--${theme.id}`]}>
       <div class="detail-header__art"><img src={artwork} alt={room.imageAlt || ""} /><span class="detail-header__art-label">{room.image ? "IMAGEN PROMOCIONAL / WEB OFICIAL" : "IMAGEN DE ARCHIVO"}</span></div>
-      <div class="detail-header__copy"><p class="eyebrow eyebrow--accent">EXPEDIENTE / LOS INOCENTES</p>{theme && <p class="detail-header__category">{room.type} / {theme.label}</p>}<h1>{room.name}</h1>{room.rankingName && room.rankingName !== room.name && <p class="detail-header__alias">En nuestro ranking: {room.rankingName}</p>}<p class="detail-header__summary">{description}</p><div class="detail-header__meta"><span>⌖ {room.place || "Ubicación por confirmar"}</span>{room.date && <span>◷ {formatDate(room.date)}</span>}</div><div class="detail-header__score"><span>VALORACIÓN DEL GRUPO</span><strong><span aria-hidden="true">★ </span>{formatScore(room.finalScore)}<small>/10</small></strong></div></div>
+      <div class="detail-header__copy">
+        <p class="eyebrow eyebrow--accent">EXPEDIENTE / LOS INOCENTES</p>
+        {theme && <p class="detail-header__category">{room.type} / {theme.label}</p>}
+        <h1>{room.name}</h1>
+        {room.rankingName && room.rankingName !== room.name && <p class="detail-header__alias">En nuestro ranking: {room.rankingName}</p>}
+        <p class="detail-header__summary">{description}</p>
+        {groupPhotos.length > 0 && <figure class="detail-header__visit" aria-label="Fotografía del grupo en esta sala"><div class="detail-header__visit-photos">{groupPhotos.map((photo) => <button type="button" aria-label={`Ampliar fotografía: ${photo.alt}`}><img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" /></button>)}</div></figure>}
+        <div class="detail-header__meta"><span>⌖ {room.place || "Ubicación por confirmar"}</span>{room.date && <span>◷ {formatDate(room.date)}</span>}</div>
+        <div class="detail-header__score"><span>VALORACIÓN DEL GRUPO</span><strong><span aria-hidden="true">★ </span>{formatScore(room.finalScore)}<small>/10</small></strong></div>
+      </div>
     </header>
-
-    {groupPhotos.length > 0 && <section class="detail-visit section-frame" aria-labelledby="detail-visit-title"><div class="detail-visit__copy"><p class="eyebrow eyebrow--accent">FOTO ORIGINAL / LOS INOCENTES</p><h2 id="detail-visit-title">Nuestro paso por <em>la sala</em></h2><p>Un recuerdo del grupo después de jugar. <a href="/visitas/">Ver todas nuestras visitas ↗</a></p></div><div class="detail-visit__photos">{groupPhotos.map((photo) => <a href={photo.src} target="_blank" rel="noopener noreferrer" aria-label={`Abrir fotografía original: ${photo.alt}`}><img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" /></a>)}</div></section>}
 
     <div class="detail-layout detail-layout--facts">
       <aside class="detail-aside" aria-label="Datos y notas de la sala">
@@ -43,4 +50,30 @@ const metaDescription = `Descubre ${room.name}${room.place ? ` en ${room.place}`
       </aside>
     </div>
   </article>
+  {groupPhotos.length > 0 && <dialog class="detail-photo-modal" aria-label="Fotografía del grupo ampliada"><button type="button" class="detail-photo-modal__close" aria-label="Cerrar fotografía">×</button><div class="detail-photo-modal__card"><img src={groupPhotos[0].src} alt={groupPhotos[0].alt} /></div></dialog>}
 </BaseLayout>
+
+<script>
+  const photoButtons = document.querySelectorAll<HTMLButtonElement>(".detail-header__visit-photos button");
+  const photoModal = document.querySelector<HTMLDialogElement>(".detail-photo-modal");
+  const modalImage = photoModal?.querySelector<HTMLImageElement>(".detail-photo-modal__card img");
+  const closePhoto = photoModal?.querySelector<HTMLButtonElement>(".detail-photo-modal__close");
+
+  if (photoModal && modalImage && closePhoto && typeof photoModal.showModal === "function") {
+    let trigger: HTMLButtonElement | null = null;
+
+    photoButtons.forEach((button) => button.addEventListener("click", () => {
+      const thumbnail = button.querySelector("img");
+      if (!thumbnail) return;
+      trigger = button;
+      modalImage.src = thumbnail.currentSrc || thumbnail.src;
+      modalImage.alt = thumbnail.alt;
+      photoModal.showModal();
+      closePhoto.focus();
+    }));
+
+    closePhoto.addEventListener("click", () => photoModal.close());
+    photoModal.addEventListener("click", (event) => { if (event.target === photoModal) photoModal.close(); });
+    photoModal.addEventListener("close", () => trigger?.focus());
+  }
+</script>
