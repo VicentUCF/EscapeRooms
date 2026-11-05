@@ -148,8 +148,6 @@ h1 em, h2 em { color: var(--accent-light); }
 .ranking-row__room img { border-color: var(--line); }
 .ranking-footer span { color: var(--seal); }
 .site-footer { border-color: var(--line); }
-.footer-mark { border-color: var(--brass); }
-.footer-mark span { color: var(--seal); }
 .site-footer nav a:hover { color: var(--accent-light); }
 .not-found {
   background: linear-gradient(90deg, #17242af5 0%, #17242ade 56%, #101a1f8a 100%), url('/decor/archive-map.webp') right center / cover;

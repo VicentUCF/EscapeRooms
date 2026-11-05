@@ -225,8 +225,7 @@ h1 em, h2 em { color: var(--accent-light); font-style: normal; }
 
 /* Footer and 404 */
 .site-footer { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; padding: 31px 5px 40px; border-top: 1px solid var(--line); color: var(--muted); }
-.footer-mark { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #9d9277; border-radius: 50%; color: var(--text); font: 700 1.2rem var(--font-display); }
-.footer-mark span { margin-left: 2px; color: var(--accent); font-size: .7rem; }
+.footer-mark { width: 48px; height: 48px; }
 .site-footer p { margin: 0; font-size: .7rem; }
 .site-footer strong { color: var(--text); letter-spacing: .08em; }
 .site-footer nav { display: flex; gap: 20px; font: .66rem var(--font-mono); text-transform: uppercase; }
