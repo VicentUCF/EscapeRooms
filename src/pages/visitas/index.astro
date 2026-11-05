@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { groupPhotos } from "../../data/group-photos.ts";
+---
+
+<BaseLayout title="Nuestras visitas" description="Fotografías originales de Los Inocentes después de jugar escape rooms de aventura y terror." active="visitas">
+  <header class="page-intro section-frame visits-intro"><div><p class="eyebrow eyebrow--accent">ARCHIVO / FOTOGRAFÍAS DEL GRUPO</p><h1>NUESTRAS <em>VISITAS</em></h1><p>Fotos originales de algunas partidas. En las salas identificadas puedes abrir la ficha y consultar nuestra valoración.</p></div><div class="page-intro__count"><strong>{groupPhotos.length}</strong><span>FOTOS<br />DEL GRUPO</span></div></header>
+  <section class="visits-section" aria-label="Fotografías de las visitas"><div class="visits-grid">{groupPhotos.map((photo, index) => <figure class="visit-photo"><a class="visit-photo__image" href={photo.src} target="_blank" rel="noopener noreferrer" data-photo-index={index} data-title={photo.roomName ?? "Una visita del grupo"} aria-label={`Ampliar fotografía ${index + 1}: ${photo.alt}`}><img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" /></a><figcaption><span>FOTO {String(index + 1).padStart(2, "0")} / LOS INOCENTES</span>{photo.roomSlug ? <a href={`/expedientes/${photo.roomSlug}/`}>{photo.roomName} <span aria-hidden="true">↗</span></a> : <strong>Una visita del grupo</strong>}</figcaption></figure>)}</div></section>
+  <dialog class="photo-modal" aria-labelledby="photo-modal-title"><div class="photo-modal__header"><div><span class="eyebrow eyebrow--accent" id="photo-modal-counter"></span><h2 id="photo-modal-title"></h2></div><button type="button" class="photo-modal__close" aria-label="Cerrar fotografía">×</button></div><img class="photo-modal__image" alt="" /><div class="photo-modal__footer"><button type="button" class="photo-modal__previous" aria-label="Fotografía anterior">← Anterior</button><span>ESC / CERRAR</span><button type="button" class="photo-modal__next" aria-label="Fotografía siguiente">Siguiente →</button></div></dialog>
+</BaseLayout>
+
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>(".visit-photo__image"));
+  const modal = document.querySelector<HTMLDialogElement>(".photo-modal");
+  const image = modal?.querySelector<HTMLImageElement>(".photo-modal__image");
+  const title = modal?.querySelector<HTMLElement>("#photo-modal-title");
+  const counter = modal?.querySelector<HTMLElement>("#photo-modal-counter");
+  const closeButton = modal?.querySelector<HTMLButtonElement>(".photo-modal__close");
+  const previousButton = modal?.querySelector<HTMLButtonElement>(".photo-modal__previous");
+  const nextButton = modal?.querySelector<HTMLButtonElement>(".photo-modal__next");
+
+  if (modal && image && title && counter && closeButton && previousButton && nextButton && typeof modal.showModal === "function") {
+    let current = 0;
+    let trigger: HTMLAnchorElement | null = null;
+
+    const showPhoto = (index: number) => {
+      current = (index + links.length) % links.length;
+      const link = links[current];
+      image.src = link.href;
+      image.alt = link.querySelector("img")?.alt ?? "Fotografía del grupo";
+      title.textContent = link.dataset.title ?? "Una visita del grupo";
+      counter.textContent = `FOTO ${String(current + 1).padStart(2, "0")} / ${String(links.length).padStart(2, "0")}`;
+    };
+
+    links.forEach((link, index) => link.addEventListener("click", (event) => {
+      event.preventDefault();
+      trigger = link;
+      showPhoto(index);
+      modal.showModal();
+    }));
+
+    closeButton.addEventListener("click", () => modal.close());
+    previousButton.addEventListener("click", () => showPhoto(current - 1));
+    nextButton.addEventListener("click", () => showPhoto(current + 1));
+    modal.addEventListener("click", (event) => { if (event.target === modal) modal.close(); });
+    modal.addEventListener("close", () => trigger?.focus());
+    modal.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") { event.preventDefault(); showPhoto(current - 1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); showPhoto(current + 1); }
+    });
+  }
+</script>

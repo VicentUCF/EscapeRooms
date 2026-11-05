@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 288" role="img" aria-labelledby="title desc">
+  <title id="title">Paleta Los Inocentes</title>
+  <desc id="desc">Siete muestras: tinta, pizarra, acero, papel, lacre, latón y pátina.</desc>
+  <rect width="1120" height="288" fill="#090e11"/>
+  <text x="40" y="38" fill="#d6cebc" font-family="monospace" font-size="19" font-weight="700" letter-spacing="3">LOS INOCENTES / PALETA DE ARCHIVO</text>
+  <path d="M40 54H1080" stroke="#687d78"/>
+  <g font-family="monospace" font-size="14">
+    <g transform="translate(40 72)"><rect width="130" height="120" fill="#090e11" stroke="#687d78"/><text y="150" fill="#d6cebc">TINTA</text><text y="174" fill="#adb8aa">#090E11</text></g>
+    <g transform="translate(192 72)"><rect width="130" height="120" fill="#17242a" stroke="#687d78"/><text y="150" fill="#d6cebc">PIZARRA</text><text y="174" fill="#adb8aa">#17242A</text></g>
+    <g transform="translate(344 72)"><rect width="130" height="120" fill="#687d78"/><text y="150" fill="#d6cebc">ACERO</text><text y="174" fill="#adb8aa">#687D78</text></g>
+    <g transform="translate(496 72)"><rect width="130" height="120" fill="#d6cebc"/><text y="150" fill="#d6cebc">PAPEL</text><text y="174" fill="#adb8aa">#D6CEBC</text></g>
+    <g transform="translate(648 72)"><rect width="130" height="120" fill="#c77b61"/><text y="150" fill="#d6cebc">LACRE</text><text y="174" fill="#adb8aa">#C77B61</text></g>
+    <g transform="translate(800 72)"><rect width="130" height="120" fill="#d0b47c"/><text y="150" fill="#d6cebc">LATÓN</text><text y="174" fill="#adb8aa">#D0B47C</text></g>
+    <g transform="translate(952 72)"><rect width="130" height="120" fill="#9db7a3"/><text y="150" fill="#d6cebc">PÁTINA</text><text y="174" fill="#adb8aa">#9DB7A3</text></g>
+  </g>
+</svg>

@@ -1,17 +1,52 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import RoomCard from "../components/RoomCard.astro";
+import { getPublishedRooms } from "../data/catalog.ts";
+import { averageScore, rankRooms } from "../lib/rooms.ts";
+import { formatScore } from "../lib/format.ts";
+import { groupPhotos } from "../data/group-photos.ts";
 
+const rooms = await getPublishedRooms();
+const featured = rankRooms(rooms).slice(0, 3);
+const best = rankRooms(rooms)[0];
+const average = averageScore(rooms);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Escape rooms valorados por el grupo" description={`Explora ${rooms.length} escape rooms de terror y aventura con sinopsis sin spoilers, notas por criterio y el ranking personal de Los Inocentes.`} active="home">
+  <section class="hero section-frame" aria-labelledby="hero-title">
+    <div class="hero__copy">
+      <p class="eyebrow eyebrow--accent"><span class="eyebrow__line"></span> ARCHIVO ABIERTO / REGISTRO DEL COLECTIVO</p>
+      <h1 id="hero-title">LOS <em>INOCENTES</em></h1>
+      <p class="hero__subtitle">ESCAPE ROOMS DE TERROR Y AVENTURA</p>
+      <p class="hero__classification">HISTORIAS SIN SPOILERS. PUNTUACIONES DEL GRUPO.</p>
+      <p class="hero__intro">Somos un grupo de amigos que juega y puntúa escape rooms. Reunimos el argumento de cada sala, nuestra nota y el desglose por criterios para ayudarte a elegir tu próxima experiencia.</p>
+      <div class="hero__actions"><a class="button button--primary" href="/expedientes/">Descubrir salas <span aria-hidden="true">↗</span></a><a class="button button--secondary" href="/ranking/">Comparar valoraciones <span aria-hidden="true">→</span></a></div>
+      <p class="hero__note"><span class="signal-dot" aria-hidden="true"></span> {rooms.length} salas valoradas por Los Inocentes</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="dossier dossier--front"><div class="dossier__top"><span>LOS INOCENTES</span><span>01 / ARCHIVO</span></div><img class="dossier__group-photo" src="/art/grupo-original.jpeg" alt="" /><div class="dossier__bottom"><b>ESCAPE ROOMS</b><span>ARGUMENTOS · NOTAS · RANKING</span></div></div>
+      <div class="hero-visual__seal"><img src="/brand/los-inocentes-emblem.webp" alt="" /><span>ARCHIVO<br />ORIGINAL</span></div>
+      <div class="hero-visual__caption">REGISTRO DEL COLECTIVO <span>✳</span> ACCESO PÚBLICO</div>
+    </div>
+  </section>
+
+  <section class="stats-strip" aria-label="Cifras del archivo">
+    <div><span class="stat-icon" aria-hidden="true">◫</span><strong>{rooms.length}</strong><span>SALAS<br />VALORADAS</span></div>
+    <div><span class="stat-icon" aria-hidden="true">✳</span><strong>{average === null ? "—" : formatScore(average)}</strong><span>NOTA MEDIA<br />DEL GRUPO /10</span></div>
+    <div><span class="stat-icon" aria-hidden="true">★</span><strong>{best ? formatScore(best.finalScore) : "—"}</strong><span>NOTA MÁS<br />ALTA /10</span></div>
+  </section>
+
+  <section class="home-section" aria-labelledby="latest-title">
+    <div class="section-heading"><div><p class="eyebrow eyebrow--accent">01 / SALAS DESTACADAS</p><h2 id="latest-title">Las mejor <em>valoradas</em></h2><p>Las tres salas con mayor nota final en nuestro ranking.</p></div><a class="text-link" href="/expedientes/">Explorar todas las salas <span aria-hidden="true">↗</span></a></div>
+    {featured.length ? <div class="room-grid">{featured.map((room) => <RoomCard room={room} />)}</div> : <div class="home-empty"><p>Aún no hay salas valoradas. En cuanto publiquemos las primeras fichas, aparecerán aquí.</p><a class="text-link" href="/expedientes/">Explorar el archivo <span aria-hidden="true">↗</span></a></div>}
+  </section>
+
+  <section class="home-section home-section--visits" aria-labelledby="visits-title">
+    <div class="section-heading"><div><p class="eyebrow eyebrow--accent">02 / NUESTRO ARCHIVO FOTOGRÁFICO</p><h2 id="visits-title">Así fueron <em>las visitas</em></h2><p>Fotografías originales del grupo al terminar algunas partidas.</p></div><a class="text-link" href="/visitas/">Ver todas las fotos <span aria-hidden="true">↗</span></a></div>
+    <div class="visit-preview">
+      {groupPhotos.slice(0, 4).map((photo) => <a class="visit-preview__item" href={photo.roomSlug ? `/expedientes/${photo.roomSlug}/` : "/visitas/"} aria-label={photo.roomName ? `Ver la ficha de ${photo.roomName}` : "Ver el archivo fotográfico"}><img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" /><span>{photo.roomName ?? "VISITA DEL GRUPO"}<span aria-hidden="true"> ↗</span></span></a>)}
+    </div>
+  </section>
+
+  <section class="closing-panel" aria-labelledby="closing-title"><div><p class="eyebrow eyebrow--accent">03 / CÓMO LEER EL ARCHIVO</p><h2 id="closing-title">El argumento, claro.<br /><em>Los secretos, a salvo.</em></h2></div><p>Cada ficha resume la premisa pública de la sala y muestra nuestra puntuación en ambientación, pruebas, actuación y otros criterios. Las notas expresan el gusto del grupo, no una clasificación universal.</p><a class="button button--secondary" href="/ranking/">Ver el ranking completo <span aria-hidden="true">→</span></a></section>
+</BaseLayout>

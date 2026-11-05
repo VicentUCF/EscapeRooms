@@ -1,0 +1,53 @@
+---
+import "../styles/global.css";
+import "../styles/palette.css";
+
+type Section = "home" | "expedientes" | "ranking" | "visitas";
+interface Props {
+  title: string;
+  description: string;
+  active: Section;
+}
+
+const { title, description, active } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#090e11" />
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <title>{title} | Los Inocentes</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <div class="ambient-backdrop" aria-hidden="true"></div>
+    <div class="site-shell">
+      <div class="utility-bar" aria-hidden="true">
+        <span>LOS INOCENTES / ARCHIVO DE ESCAPE ROOMS</span>
+        <span>HISTORIAS SIN SPOILERS <span class="utility-bar__divider">//</span> NOTAS DEL GRUPO</span>
+      </div>
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Los Inocentes, inicio">
+          <img src="/brand/los-inocentes-emblem.webp" alt="" width="58" height="58" />
+          <span class="brand__text"><strong>LOS INOCENTES</strong><small>ARCHIVO DE ESCAPE ROOMS</small></span>
+        </a>
+        <nav class="site-nav" aria-label="Navegación principal">
+          <a href="/" aria-current={active === "home" ? "page" : undefined}>Inicio</a>
+          <a href="/expedientes/" aria-current={active === "expedientes" ? "page" : undefined}>Expedientes</a>
+          <a href="/ranking/" aria-current={active === "ranking" ? "page" : undefined}>Ranking</a>
+          <a href="/visitas/" aria-current={active === "visitas" ? "page" : undefined}>Visitas</a>
+        </nav>
+      </header>
+      <main id="contenido"><slot /></main>
+      <footer class="site-footer">
+        <span class="footer-mark">LI<span aria-hidden="true">✳</span></span>
+        <p><strong>LOS INOCENTES</strong><br />Escape rooms de terror y aventura con sinopsis sin spoilers y valoraciones personales.</p>
+        <nav aria-label="Enlaces del pie de página"><a href="/">Inicio</a><a href="/expedientes/">Expedientes</a><a href="/ranking/">Ranking</a><a href="/visitas/">Visitas</a></nav>
+      </footer>
+    </div>
+  </body>
+</html>

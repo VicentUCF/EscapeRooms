@@ -1,0 +1,28 @@
+---
+import type { PublishedEscapeRoom } from "../types/escape-room.ts";
+import { getRoomTheme } from "../data/room-themes.ts";
+import { formatDate, formatScore } from "../lib/format.ts";
+
+interface Props {
+  room: PublishedEscapeRoom;
+}
+const { room } = Astro.props;
+const artwork = room.image || (room.type === "Terror" ? "/art/terror-archive-photo.webp" : "/art/aventura-archive-photo.webp");
+const summary = room.description ?? "Consulta la puntuación del grupo y los datos disponibles de esta sala.";
+const theme = getRoomTheme(room);
+---
+
+<a class:list={["room-card", theme && "theme-card", theme && `theme--${theme.id}`]} style={theme ? `--theme-backdrop: url('${theme.background}')` : undefined} href={`/expedientes/${room.slug}/`}>
+  <div class="room-card__image">
+    <img src={artwork} alt="" loading="lazy" />
+    <span class="room-card__stamp">{room.image ? "IMAGEN OFICIAL" : "IMAGEN DE ARCHIVO"}</span>
+    <span class="room-card__status">✓ VALORADO</span>
+  </div>
+  <div class="room-card__body">
+    {theme && <span class="room-card__category">{room.type} / {theme.label}</span>}
+    <span class="eyebrow">{room.place || "Ubicación por confirmar"} {room.date && <><span aria-hidden="true">/</span> {formatDate(room.date)}</>}</span>
+    <div class="room-card__line"><h3>{room.name}</h3><span class="room-card__arrow" aria-hidden="true">↗</span></div>
+    <p>{summary}</p>
+    <div class="room-card__bottom"><span>VER FICHA Y PUNTUACIONES</span><strong><span aria-hidden="true">★ </span>{formatScore(room.finalScore)}<small>/10</small></strong></div>
+  </div>
+</a>

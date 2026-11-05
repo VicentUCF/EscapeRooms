@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import RoomCard from "../../components/RoomCard.astro";
+import EmptyState from "../../components/EmptyState.astro";
+import { getPublishedRooms } from "../../data/catalog.ts";
+import { rankRooms, roomLocations } from "../../lib/rooms.ts";
+
+const rooms = rankRooms(await getPublishedRooms());
+const locations = roomLocations(rooms);
+const hasDates = rooms.some((room) => room.date != null);
+---
+
+<BaseLayout title="Salas de escape valoradas" description="Busca escape rooms de terror y aventura por nombre, tipo o ubicación. Lee su argumento sin spoilers y compara las notas de Los Inocentes." active="expedientes">
+  <section class="page-intro section-frame">
+    <div><p class="eyebrow eyebrow--accent">ARCHIVO / EXPEDIENTES</p><h1>Encuentra tu próximo <em>escape room.</em></h1><p>Filtra las salas que hemos valorado y descubre su argumento sin spoilers. En cada ficha verás la nota final y las puntuaciones por criterio del grupo.</p></div>
+    <div class="page-intro__count"><strong>{String(rooms.length).padStart(2, "0")}</strong><span>SALAS<br />VALORADAS</span></div>
+  </section>
+
+  {rooms.length > 0 ? <section class="archive-section" aria-label="Salas valoradas">
+    <div class="list-meta">
+      <p id="result-count" role="status">Mostrando {rooms.length} {rooms.length === 1 ? "sala" : "salas"}</p>
+      <span>VALORACIONES PERSONALES DEL GRUPO</span>
+      <button class="filter-toggle" id="filter-toggle" type="button" aria-controls="room-filters" aria-expanded="false" hidden>Filtrar salas <span class="filter-toggle__count" id="active-filter-count" hidden>0</span><span class="filter-toggle__chevron" aria-hidden="true">⌄</span></button>
+    </div>
+    <form class="filter-panel" id="room-filters" role="search" hidden>
+      <div class="filter-panel__heading"><span class="eyebrow">// BUSCAR SALAS</span><button class="reset-button" type="reset">Quitar filtros <span aria-hidden="true">↺</span></button></div>
+      <div class="filter-grid">
+        <label>Nombre de la sala <input type="search" name="name" placeholder="Ej.: La Peluquería" autocomplete="off" /></label>
+        <label>Tipo <select name="type"><option value="">Todos</option><option value="Terror">Terror</option><option value="Aventura">Aventura</option></select></label>
+        <label>Ubicación <select name="place"><option value="">Todas</option>{locations.map((place) => <option value={place}>{place}</option>)}</select></label>
+        <label>Ordenar <select name="sort"><option value="score">Mejor valoradas</option><option value="name">Nombre</option>{hasDates && <option value="date">Más recientes</option>}</select></label>
+      </div>
+    </form>
+    <div class="room-grid" id="room-grid">
+      {rooms.map((room) => <div class="room-grid__item" data-room data-name={room.name} data-search={`${room.name} ${room.rankingName ?? ""}`} data-type={room.type} data-place={room.place ?? ""} data-date={room.date ?? ""} data-score={room.finalScore}><RoomCard room={room} /></div>)}
+    </div>
+    <div class="filter-empty" id="filter-empty" hidden><strong>No hay salas con esos filtros.</strong><p>Prueba otro nombre, tipo o ubicación, o quita los filtros.</p></div>
+  </section> : <section class="archive-section"><EmptyState title="Todavía no hay salas valoradas" message="Publicaremos las fichas cuando tengamos las primeras puntuaciones del grupo." /></section>}
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#room-filters");
+  const grid = document.querySelector<HTMLElement>("#room-grid");
+  const count = document.querySelector<HTMLElement>("#result-count");
+  const empty = document.querySelector<HTMLElement>("#filter-empty");
+  const toggle = document.querySelector<HTMLButtonElement>("#filter-toggle");
+  const activeCount = document.querySelector<HTMLElement>("#active-filter-count");
+
+  if (form && grid && count && empty && toggle && activeCount) {
+    toggle.hidden = false;
+    toggle.addEventListener("click", () => {
+      form.hidden = !form.hidden;
+      toggle.setAttribute("aria-expanded", String(!form.hidden));
+    });
+    form.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        form.hidden = true;
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.focus();
+      }
+    });
+    form.addEventListener("submit", (event) => event.preventDefault());
+    const cards = [...grid.querySelectorAll<HTMLElement>("[data-room]")];
+    const normalise = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("es");
+    const collator = new Intl.Collator("es", { sensitivity: "base" });
+
+    const update = () => {
+      const values = new FormData(form);
+      const search = normalise(String(values.get("name") ?? "").trim());
+      const type = String(values.get("type") ?? "");
+      const place = String(values.get("place") ?? "");
+      const sort = String(values.get("sort") ?? "score");
+      const selectedFilters = Number(Boolean(search)) + Number(Boolean(type)) + Number(Boolean(place)) + Number(sort !== "score");
+      activeCount.hidden = selectedFilters === 0;
+      activeCount.textContent = String(selectedFilters);
+      let shown = 0;
+
+      cards.sort((a, b) => {
+        if (sort === "name") return collator.compare(a.dataset.name ?? "", b.dataset.name ?? "");
+        if (sort === "date") return (b.dataset.date ?? "").localeCompare(a.dataset.date ?? "") || Number(b.dataset.score) - Number(a.dataset.score);
+        return Number(b.dataset.score) - Number(a.dataset.score) || collator.compare(a.dataset.name ?? "", b.dataset.name ?? "");
+      });
+
+      for (const card of cards) {
+        const matches = normalise(card.dataset.search ?? "").includes(search) && (!type || card.dataset.type === type) && (!place || card.dataset.place === place);
+        card.hidden = !matches;
+        if (matches) shown++;
+        grid.append(card);
+      }
+      count.textContent = `Mostrando ${shown} ${shown === 1 ? "sala" : "salas"}`;
+      empty.hidden = shown !== 0;
+    };
+
+    form.addEventListener("input", update);
+    form.addEventListener("change", update);
+    form.addEventListener("reset", () => requestAnimationFrame(update));
+  }
+</script>

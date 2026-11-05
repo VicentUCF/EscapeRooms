@@ -1,0 +1,162 @@
+/* Los Inocentes — ink, aged paper, oxidized metal and wax seal. */
+:root {
+  --ink: #090e11;
+  --slate: #17242a;
+  --slate-raised: #1e3035;
+  --steel: #687d78;
+  --paper: #d6cebc;
+  --paper-bright: #f4e8d4;
+  --seal: #c77b61;
+  --seal-deep: #8f3f34;
+  --brass: #d0b47c;
+  --patina: #9db7a3;
+  --bg: var(--ink);
+  --panel: var(--slate);
+  --panel-deep: #101a1f;
+  --line: var(--steel);
+  --line-soft: #354a4c;
+  --text: var(--paper);
+  --muted: #adb8aa;
+  --accent: var(--seal);
+  --accent-light: #e0a185;
+  --green: var(--patina);
+  --gold: var(--brass);
+}
+body {
+  background: radial-gradient(ellipse at 50% -18%, #24363b 0, #111a1e 32%, var(--ink) 72%);
+}
+body::before {
+  z-index: 30;
+  opacity: .5;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 2px, #02060755 3px 4px),
+    repeating-linear-gradient(to right, #c77b6109 0 1px, #9db7a309 1px 2px, #687d7809 2px 3px);
+}
+body::after {
+  z-index: 31;
+  opacity: .65;
+  background: radial-gradient(ellipse at center, transparent 55%, #02050680 100%);
+}
+::selection { background: var(--seal); color: var(--ink); }
+:focus-visible { outline-color: var(--paper-bright); }
+.utility-bar { color: var(--patina); text-shadow: none; }
+.utility-bar__divider { color: var(--seal); }
+.site-header {
+  background: linear-gradient(#1b2b30f7, #101a1ff7);
+  border-color: var(--line);
+  box-shadow: inset 0 0 0 3px var(--ink), 0 0 17px #090e1140;
+}
+.brand img { filter: drop-shadow(0 0 5px #d0b47c40); }
+.brand strong { text-shadow: 1px 0 #c77b6145, -1px 0 #9db7a340; }
+.site-nav a { border-color: #465b5b; background: #101b20; color: var(--paper); }
+.site-nav a:hover { color: var(--paper-bright); background: #263b3f; }
+.site-nav a[aria-current='page'] {
+  border-color: var(--seal);
+  background: #432a27;
+  color: var(--paper-bright);
+  box-shadow: inset 0 -2px var(--seal), 0 0 11px #c77b6129;
+}
+.section-frame {
+  border-color: var(--line);
+  background: linear-gradient(135deg, #1b2c31, #0e181c 76%);
+  box-shadow: inset 0 0 0 3px var(--ink), 0 0 17px #090e1140;
+}
+.eyebrow--accent { color: var(--accent-light); text-shadow: none; }
+h1, h2, h3 { text-shadow: 1px 0 #c77b6126, -1px 0 #9db7a326; }
+h1 em, h2 em { color: var(--accent-light); }
+.button { border-color: var(--line); box-shadow: inset 0 0 0 2px #101a1f; }
+.button--primary {
+  border-color: var(--seal);
+  background: var(--seal-deep);
+  color: var(--paper-bright);
+  box-shadow: inset 0 -2px var(--seal), 0 0 12px #c77b6129;
+}
+.button--primary:hover { background: #99473a; color: var(--paper-bright); }
+.button--secondary { border-color: var(--steel); background: #203633; color: var(--paper); }
+.button--secondary:hover { border-color: var(--patina); background: #2a4440; }
+.text-link, .reset-button, .official-link, .side-back-link { color: var(--accent-light); }
+.text-link:hover, .official-link:hover { color: var(--paper-bright); }
+
+.hero__copy::before { background: var(--seal); box-shadow: 0 0 10px #c77b6140; }
+.hero__subtitle { color: var(--paper); }
+.hero__classification { border-color: var(--seal); color: var(--accent-light); }
+.hero__intro { color: var(--paper); border-color: var(--patina); }
+.signal-dot { background: var(--patina); box-shadow: 0 0 7px #9db7a366; }
+.hero-visual {
+  background: linear-gradient(90deg, #10191d55, transparent 65%), url('/decor/evidence-desk.webp') center / cover;
+}
+.dossier--front { border-color: #8f806b; background: #c4b69c; color: #273438; }
+.dossier__top { border-color: #756d5b; }
+.dossier--front img { border-color: #e7dbc3; }
+.hero-visual__seal { border-color: var(--seal); color: var(--seal); background: #1b2829e8; }
+.hero-visual__caption { background: #090e11e8; color: var(--patina); }
+.hero-visual__caption span { color: var(--seal); }
+.stats-strip { border-color: var(--line); background: #142127; }
+.stats-strip > div + div { border-color: var(--line); }
+.stat-icon { color: var(--brass); }
+.stats-strip strong { color: var(--paper); }
+.closing-panel { border-color: var(--line); border-left-color: var(--seal); background: radial-gradient(circle at 0 100%, #c77b6117, transparent 37%), #1b2a2d; }
+.home-empty { border-color: var(--line); background: var(--slate); }
+
+.page-intro {
+  background: linear-gradient(90deg, #17242aeb 0%, #17242ad4 46%, #101a1f68 100%), url('/decor/archive-map.webp') right center / cover;
+}
+.page-intro--ranking {
+  background: linear-gradient(90deg, #17242aeb 0%, #17242ad4 46%, #101a1f70 100%), url('/decor/classification-radar.webp') right center / cover;
+}
+.page-intro__count { border-color: var(--line); }
+.empty-state, .filter-empty { border-color: var(--line); background: var(--slate); }
+.filter-panel { border-color: var(--line); background: #111d22; box-shadow: inset 0 0 0 2px #1c2a2e; }
+.filter-panel__heading { border-color: var(--line); }
+.filter-grid input, .filter-grid select { border-color: var(--line); background-color: var(--ink); color: var(--paper); }
+.filter-grid input::placeholder { color: var(--muted); }
+.list-meta { color: var(--muted); }
+.room-card { border-color: var(--line); background: #111d22; box-shadow: inset 0 0 0 2px #1b2a2e; }
+.room-card:hover { border-color: var(--seal); }
+.room-card__image { background: #203337; }
+.room-card__image::after { background: linear-gradient(0deg, #090e1199, transparent 45%); }
+.room-card__stamp { border-color: var(--paper); background: #090e11dc; color: var(--paper-bright); }
+.room-card__status { border-color: var(--patina); background: #263b35e8; color: #dce8d8; }
+.room-card__body .eyebrow { color: var(--muted); }
+.room-card__body .eyebrow span { color: var(--seal); }
+.room-card__bottom { border-color: var(--line-soft); }
+.type-badge--terror { color: #e0a185; background: #462e2c; }
+.type-badge--adventure { color: #c2d6c3; background: #284038; }
+
+.detail-header__art { background: #203337; }
+.detail-header__art::after { background: linear-gradient(0deg, #090e1199, transparent 36%); }
+.detail-header__art-label { color: var(--paper-bright); }
+.detail-header__summary, .content-panel > p:last-child { color: var(--paper); }
+.content-panel, .verdict-panel, .side-panel { border-color: var(--line); background: #111d22; }
+.content-panel--pending {
+  background: linear-gradient(90deg, #111d22f5 0%, #111d22dc 55%, #111d2280 100%), url('/decor/pending-dossier.webp') right center / cover;
+}
+.verdict-panel { border-left-color: var(--seal); background: linear-gradient(120deg, #352d29, #17262a 70%); }
+.verdict-panel__seal { border-color: #c77b614a; color: #c77b614a; }
+.side-panel dl > div { border-color: var(--line-soft); }
+.identity-note { border-color: var(--brass); background: #332f26; color: #e5d5af; }
+.criterion__track { background: var(--line-soft); }
+.criterion__track span { background: var(--seal); }
+.ranking-switch button { border-color: var(--line); background: #111d22; color: var(--paper); }
+.ranking-switch button:hover { border-color: var(--seal); }
+.ranking-switch button[aria-pressed='true'] { border-color: var(--seal); background: #432a27; color: var(--paper-bright); box-shadow: inset 0 -2px var(--seal); }
+.ranking-list { border-color: var(--line); }
+.ranking-list__head { background: #26383b; color: var(--paper); }
+.ranking-row { border-color: var(--line-soft); background: #111d22; }
+.ranking-row:nth-of-type(odd) { background: #17262b; }
+.ranking-row:hover { background: #263b3f; }
+.ranking-row__room img { border-color: var(--line); }
+.ranking-footer span { color: var(--seal); }
+.site-footer { border-color: var(--line); }
+.footer-mark { border-color: var(--brass); }
+.footer-mark span { color: var(--seal); }
+.site-footer nav a:hover { color: var(--accent-light); }
+.not-found {
+  background: linear-gradient(90deg, #17242af5 0%, #17242ade 56%, #101a1f8a 100%), url('/decor/archive-map.webp') right center / cover;
+}
+
+@media (prefers-contrast: more) {
+  :root { --line: #a9bbb2; --line-soft: #80958d; --muted: #d6dfd5; }
+  body::before, body::after, .ambient-backdrop, .site-header::before { display: none; }
+  .room-card, .ranking-list, .filter-panel, .filter-grid input, .filter-grid select { border-color: var(--paper); }
+}

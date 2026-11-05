@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EmptyState from "../../components/EmptyState.astro";
+import { getPublishedRooms } from "../../data/catalog.ts";
+import { getRoomTheme } from "../../data/room-themes.ts";
+import { rankRooms } from "../../lib/rooms.ts";
+import { formatScore } from "../../lib/format.ts";
+
+const ranked = rankRooms(await getPublishedRooms());
+const rankedWithThemes = ranked.map((room, index) => ({ room, index, theme: getRoomTheme(room) }));
+---
+
+<BaseLayout title="Ranking de escape rooms" description="Consulta el ranking personal de escape rooms de Los Inocentes. Compara notas finales y filtra salas de terror o aventura." active="ranking">
+  <section class="page-intro page-intro--ranking section-frame"><div><p class="eyebrow eyebrow--accent">ARCHIVO / CLASIFICACIÓN</p><h1>El ranking de <em>Los Inocentes.</em></h1><p>Ordenamos las salas por la nota final que les dio nuestro grupo. Filtra por terror o aventura y abre cada ficha para ver el desglose.</p></div><div class="page-intro__count"><strong>★</strong><span>NOTAS<br />DEL GRUPO</span></div></section>
+  {ranked.length > 0 ? <section class="ranking-section" aria-label="Clasificación de salas">
+    <div class="ranking-toolbar"><div class="ranking-switch" id="ranking-switch" role="group" aria-label="Filtrar clasificación" hidden><button type="button" data-filter="all" aria-pressed="true">Todas</button><button type="button" data-filter="Terror" aria-pressed="false">Terror</button><button type="button" data-filter="Aventura" aria-pressed="false">Aventura</button></div><span class="eyebrow">DE MAYOR A MENOR NOTA / 0–10</span></div>
+    <div class="ranking-list" id="ranking-list"><div class="ranking-list__head" aria-hidden="true"><span>PUESTO</span><span>EXPEDIENTE</span><span>TIPO</span><span>UBICACIÓN</span><span>NOTA</span></div>
+      {rankedWithThemes.map(({ room, index, theme }) => <a class:list={["ranking-row", theme && "theme-row", theme && `theme--${theme.id}`]} href={`/expedientes/${room.slug}/`} data-rank-row data-type={room.type}><span class="ranking-row__number" data-rank-number>{String(index + 1).padStart(2, "0")}</span><span class="ranking-row__room"><img src={room.image || (room.type === "Terror" ? "/art/terror-archive-photo.webp" : "/art/aventura-archive-photo.webp")} alt="" loading="lazy" /><span><small>{theme ? `${room.type} / ${theme.label}` : room.type}</small><strong>{room.name}</strong></span></span><span class:list={["type-badge", room.type === "Terror" ? "type-badge--terror" : "type-badge--adventure"]}>{room.type}</span><span class="ranking-row__place">⌖ {room.place || "Por confirmar"}</span><span class="ranking-row__score"><span aria-hidden="true">★ </span>{formatScore(room.finalScore)}</span><span class="ranking-row__arrow" aria-hidden="true">↗</span></a>)}
+    </div>
+    <p class="ranking-footer" id="ranking-count" role="status">{ranked.length} {ranked.length === 1 ? "SALA VALORADA" : "SALAS VALORADAS"} <span>·</span> RANKING PERSONAL DEL GRUPO</p>
+  </section> : <section class="archive-section"><EmptyState title="El ranking aún está vacío" message="Las salas aparecerán aquí cuando publiquemos sus puntuaciones." /></section>}
+</BaseLayout>
+
+<script>
+  const switcher = document.querySelector<HTMLElement>("#ranking-switch");
+  const count = document.querySelector<HTMLElement>("#ranking-count");
+  const rows = [...document.querySelectorAll<HTMLElement>("[data-rank-row]")];
+  if (switcher && rows.length) {
+    switcher.hidden = false;
+    switcher.addEventListener("click", (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-filter]");
+      if (!button) return;
+      const filter = button.dataset.filter;
+      let rank = 0;
+      for (const row of rows) {
+        const visible = filter === "all" || row.dataset.type === filter;
+        row.hidden = !visible;
+        if (visible) row.querySelector<HTMLElement>("[data-rank-number]")!.textContent = String(++rank).padStart(2, "0");
+      }
+      if (count) count.textContent = `${rank} ${rank === 1 ? "SALA VALORADA" : "SALAS VALORADAS"} · RANKING PERSONAL DEL GRUPO`;
+      for (const item of switcher.querySelectorAll("button")) item.setAttribute("aria-pressed", String(item === button));
+    });
+  }
+</script>
